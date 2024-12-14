@@ -8,19 +8,26 @@
 
 #define MAX_USUARIOS 100
 #define MAX_LONGITUD 50
-#define TRES_INTENTOS 3
+#define MAX_CANTIDAD_LIBROS 1000
+
 
 int sleep;
 void usuario_validado();
 void menu_libros();
+void agregar_Libros();
+void ver_ListaLibros();
+int buscar_Libro();
+int editar_Libro();
+int borrar_Libro();
+void ayuda();
 void salirProg();
 
 typedef struct {
     char usuario[MAX_LONGITUD];
     char contrasena[MAX_LONGITUD];
-} Usuario;
+} DatosUsuario;
 
-Usuario usuarios[MAX_USUARIOS];
+DatosUsuario usuarios[MAX_USUARIOS];
 int numUsuarios = 0;
 
 void cargar_usuarios() {
@@ -39,7 +46,7 @@ void cargar_usuarios() {
 void guardar_usuarios() {
     FILE *archivo = fopen("usuarios.txt", "w");
     for (int i = 0; i < numUsuarios; i++) {
-        fprintf(archivo, "%s %s\n", usuarios[i].usuario, usuarios[i].contrasena);
+        fprintf(archivo,"%s %s\n" , usuarios[i].usuario, usuarios[i].contrasena);
     }
     fclose(archivo);
 }
@@ -130,26 +137,224 @@ void usuario_validado(){
         menu_libros(); // Puedes llamar a la función que muestra el menú de libros aquí 
     } 
     else{ 
+        
         printf("Usuario o contraseña incorrectos..\n"); 
         Sleep(2000);
         getchar();
+        char eleccion;    
+        printf("Desea crear un usuario? (Y/N)");
+        scanf("%c", &eleccion);
+        eleccion = toupper(eleccion);
+        if (eleccion == 'Y'){
+            agregar_usuario();
+            usuario_validado();
+        }
+        else if (eleccion == 'N'){            
+            salirProg();
+        }
     }
-    char eleccion;    
-    printf("Desea crear un usuario? (Y/N)");
-    scanf("%c", &eleccion);
-    eleccion = toupper(eleccion);
-    if (eleccion == 'Y'){
-        agregar_usuario();
-        usuario_validado();
-    }
-    else if (eleccion == 'N'){
-        salirProg();
-    }
+        
 }
+   
+
+
 void menu_libros(){
-    printf("sisi, aguante milei");
+    system("cls");
+    cabeza();
+    int opcion_MenuLibros;
+    int id;
+    do
+    {
+        printf("1. Agregar Libros\n");
+        printf("2. Ver Lista de libros\n");
+        printf("3. Buscar Libro\n");
+        printf("4. Editar Libro\n");
+        printf("5. Borrar Libro\n");
+        printf("6. Ayuda\n");
+        printf("7. Salir\n");
+        printf("\nSeleccione una opcion: ");
+        scanf("%d", &opcion_MenuLibros);
+         switch (opcion_MenuLibros)
+        {
+            case 1:
+                agregar_Libros();
+            break;
+            case 2:
+                ver_ListaLibros(); 
+            break;
+            case 3:
+                printf("Ingrese el ID del libro: "); 
+                scanf("%d", &id); 
+                buscar_Libro(id);
+            break;
+            case 4:printf("Ingrese el ID del libro que quiere editar: "); 
+                scanf("%d", &id);
+                editar_Libro(id);
+            break;
+            case 5:
+                printf("Ingrese el ID del libro a borrar: "); 
+                scanf("%d", &id);
+                borrar_Libro(id);  
+            break;
+            case 6:
+                ayuda();
+            break;
+            case 7:
+                salirProg();
+            break;
+        }
+    } while (opcion_MenuLibros != 7);
+
 }
 
+/*----------------------------------------------------------------*/
+
+typedef struct{ 
+    int ID; 
+    char Nombre[MAX_LONGITUD]; 
+    char Autor[MAX_LONGITUD]; 
+}DatosLibreria;
+
+DatosLibreria libros[MAX_CANTIDAD_LIBROS]; 
+int numCantidadLibros = 0;
+
+void agregar_Libros() {
+    system("cls");
+    cabeza();
+
+    if (numCantidadLibros >= MAX_CANTIDAD_LIBROS) {
+        printf("No se pueden agregar más libros, la capacidad máxima ha sido alcanzada.\n");
+        return;
+    }
+
+    printf("Ingrese el ID del libro: ");
+    scanf("%d", &libros[numCantidadLibros].ID);
+
+    printf("Ingrese el Nombre del libro: ");
+    scanf("%s", libros[numCantidadLibros].Nombre);
+
+    printf("Ingrese el Autor del libro: ");
+    scanf("%s", libros[numCantidadLibros].Autor);
+
+    FILE *libreria = fopen("libros.txt", "a");
+    if (libreria == NULL) {
+        perror("Error al abrir el archivo");
+        return;
+    }
+
+    fprintf(libreria, "ID: %d NOMBRE: %s AUTOR: %s\n", 
+            libros[numCantidadLibros].ID, 
+            libros[numCantidadLibros].Nombre, 
+            libros[numCantidadLibros].Autor);
+
+    fclose(libreria);
+    numCantidadLibros++;
+
+    printf("Libro agregado con éxito.\n");
+}
+
+/*----------------------------------------------------------------*/
+
+void ver_ListaLibros(){
+    system ("cls");
+    cabeza();
+    for (int i = 0; i < numCantidadLibros; i++){ 
+        printf("ID: %d, Nombre: %s, Autor: %s\n", libros[i].ID, libros[i].Nombre, libros[i].Autor);
+    }
+}
+
+/*----------------------------------------------------------------*/
+
+int buscar_Libro(int id){
+    system ("cls");
+    cabeza();
+    for (int i = 0; i < numCantidadLibros; i++){ 
+        if (libros[i].ID == id){ 
+            printf("ID: %d, Nombre: %s, Autor: %s\n", libros[i].ID, libros[i].Nombre, libros[i].Autor); 
+            return 0; 
+        } 
+    } 
+
+    printf("Libro no encontrado.\n");
+}
+
+/*----------------------------------------------------------------*/
+
+int editar_Libro(int id) {
+    system("cls");
+    cabeza();
+    for (int i = 0; i < numCantidadLibros; i++) {
+        if (libros[i].ID == id) {
+            printf("Editar libro con ID: %d\n", id);
+            printf("Nuevo Nombre: ");
+            scanf("%s", libros[i].Nombre);
+            printf("Nuevo Autor: ");
+            scanf("%s", libros[i].Autor);
+            FILE *libreria = fopen("libros.txt", "w");
+            if (libreria == NULL) {
+                perror("Error al abrir el archivo");
+                return 0;
+            }
+            for (int j = 0; j < numCantidadLibros; j++) {
+                fprintf(libreria, "ID: %d NOMBRE: %s AUTOR: %s\n",
+                        libros[j].ID, libros[j].Nombre, libros[j].Autor);
+            }
+            fclose(libreria);
+            printf("Libro editado con éxito.\n");
+            return 0;
+        }
+    }
+    printf("Libro no encontrado.\n");
+};
+
+/*----------------------------------------------------------------*/
+
+int borrar_Libro(int id) {
+    system("cls");
+    cabeza();
+    int encontrado = 0;
+    for (int i = 0; i < numCantidadLibros; i++) {
+        if (libros[i].ID == id) {
+            encontrado = 1;
+            for (int j = i; j < numCantidadLibros - 1; j++) {
+                libros[j] = libros[j + 1];
+            }
+            numCantidadLibros--;
+            break;
+        }
+    }
+    if (!encontrado) {
+        printf("Libro no encontrado.\n");
+        return 0;
+    }
+    
+    FILE *libreria = fopen("libros.txt", "w");
+    if (libreria == NULL) {
+        perror("Error al abrir el archivo");
+        return 0;
+    }
+    for (int j = 0; j < numCantidadLibros; j++) {
+        fprintf(libreria, "ID: %d NOMBRE: %s AUTOR: %s\n",
+                libros[j].ID, libros[j].Nombre, libros[j].Autor);
+    }
+    fclose(libreria);
+    printf("Libro borrado con éxito.\n");
+}
+
+/*----------------------------------------------------------------*/
+
+void ayuda() {
+    printf("Funciones disponibles:\n");
+    printf("1. Agrega libros a la lista.\n");
+    printf("2. Muestra todos los libros.\n");
+    printf("3. Busca un libro por ID.\n");
+    printf("4. Edita la información de un libro por ID.\n");
+    printf("5. Borra un libro por ID.\n");
+    printf("6. Muestra este mensaje de ayuda.\n");
+    print("\n\nTodos los derechos reservados, 2024@TobiasMolinaDev\n\n");
+}
+
+/*----------------------------------------------------------------*/
 
 int main() {
     cargar_usuarios();
@@ -157,11 +362,12 @@ int main() {
     return 0;
 }
 
+/*----------------------------------------------------------------*/
 
 void salirProg(){
-    system("clear");
-    printf("Thank you  !!\n\n");
-    printf("wait.......\n");
+    system("cls");
+    printf("Gracias  !!\n\n");
+    printf("Espera.......\n");
 
     Sleep(5000);
     exit(0);
