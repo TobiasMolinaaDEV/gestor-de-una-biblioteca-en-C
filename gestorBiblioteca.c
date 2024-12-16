@@ -18,7 +18,7 @@ void agregar_Libros();
 void ver_ListaLibros();
 int buscar_Libro();
 int editar_Libro();
-int borrar_Libro();
+void borrar_Libro();
 void ayuda();
 void salirProg();
 
@@ -70,7 +70,7 @@ void agregar_usuario() {
     if (usuario_existe(usuario)) {
         printf("\n// El usuario '%s' ya existe.\n", usuario);
     } else {
-        printf("Introduce la contraseña: ");
+        printf("Introduce la contrasena: ");
         scanf("%s", contrasena);
         strcpy(usuarios[numUsuarios].usuario, usuario);
         strcpy(usuarios[numUsuarios].contrasena, contrasena);
@@ -92,7 +92,7 @@ void menu() {
         printf("\n1. Agregar nuevo usuario\n");
         printf("2. Usuario existente\n");
         printf("3. Salir\n");
-        printf("Selecciona una opcion: ");
+        printf("\nSelecciona una opcion: ");
         scanf("%d", &opcion);
 
         switch (opcion) {
@@ -108,7 +108,7 @@ void menu() {
                 break;
                 
             default:
-                printf("Opción no válida. Inténtalo de nuevo.\n");
+                printf("Opción no valida. Inténtalo de nuevo.\n");
         }
     } while (opcion != 2);
 }
@@ -121,7 +121,7 @@ void usuario_validado(){
     int found = 0; // Pedir usuario y contraseña 
     printf("Ingrese el usuario: "); 
     scanf("%s", username); 
-    printf("Ingrese la contraseña: "); 
+    printf("Ingrese la contrasena: "); 
     scanf("%s", password); // Comparar con los usuarios cargados 
     for (int i = 0; i < numUsuarios; i++) 
     { 
@@ -138,7 +138,7 @@ void usuario_validado(){
     } 
     else{ 
         
-        printf("Usuario o contraseña incorrectos..\n"); 
+        printf("Usuario o contrasena incorrectos..\n"); 
         Sleep(2000);
         getchar();
         char eleccion;    
@@ -309,7 +309,7 @@ int editar_Libro(int id) {
 
 /*----------------------------------------------------------------*/
 
-int borrar_Libro(int id) {
+void borrar_Libro(int id) {
     system("cls");
     cabeza();
     int encontrado = 0;
@@ -325,13 +325,13 @@ int borrar_Libro(int id) {
     }
     if (!encontrado) {
         printf("Libro no encontrado.\n");
-        return 0;
+        return;
     }
     
     FILE *libreria = fopen("libros.txt", "w");
     if (libreria == NULL) {
         perror("Error al abrir el archivo");
-        return 0;
+        return;
     }
     for (int j = 0; j < numCantidadLibros; j++) {
         fprintf(libreria, "ID: %d NOMBRE: %s AUTOR: %s\n",
@@ -344,14 +344,29 @@ int borrar_Libro(int id) {
 /*----------------------------------------------------------------*/
 
 void ayuda() {
+    system("cls");
+    int eleccion;
     printf("Funciones disponibles:\n");
     printf("1. Agrega libros a la lista.\n");
     printf("2. Muestra todos los libros.\n");
     printf("3. Busca un libro por ID.\n");
-    printf("4. Edita la información de un libro por ID.\n");
+    printf("4. Edita la informacion de un libro por ID.\n");
     printf("5. Borra un libro por ID.\n");
     printf("6. Muestra este mensaje de ayuda.\n");
-    print("\n\nTodos los derechos reservados, 2024@TobiasMolinaDev\n\n");
+    
+    printf("\n\n¿Desea volver al menu principal o salir?");
+    printf("\n1. Menu principal.");
+    printf("\n2. salir.");
+    printf("\nSeleccione:");
+    scanf("%d", &eleccion);
+    if (eleccion == 1)
+    {
+        menu_libros();
+    }
+    else if(eleccion == 2)
+    {
+        salirProg();
+    }
 }
 
 /*----------------------------------------------------------------*/
