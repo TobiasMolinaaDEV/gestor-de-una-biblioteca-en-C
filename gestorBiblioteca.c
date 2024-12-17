@@ -189,7 +189,7 @@ void menu_libros(){
                 break;
             case 6:
                 ayuda();
-            break;
+                break;
             case 7:
                 salirProg();
             break;
@@ -234,39 +234,26 @@ int agregar_Libros() {
         }
     }
     
-    fprintf(libreria, "ID: %d NOMBRE: %s AUTOR: %s\n", 
-            libros[numCantidadLibros].ID, 
-            libros[numCantidadLibros].Nombre, 
-            libros[numCantidadLibros].Autor);
-
+    add.ID = d;
+    
     printf("Ingrese Titulo: ");
     fflush(stdin);
     scanf("%s", add.Titulo);
 
-    printf("Libro agregado con éxito.\n");
-}
+    printf("Ingrese Autor: ");
+    fflush(stdin);
+    scanf("%s", add.Autor);
 
-/*----------------------------------------------------------------*/
+    printf("ingrese Editorial: ");
+    fflush(stdin);
+    scanf("%s", add.editorial);
 
-void ver_ListaLibros(){
-    system ("cls");
-    cabeza();
-    for (int i = 0; i < numCantidadLibros; i++){ 
-        printf("ID: %d, Nombre: %s, Autor: %s\n", libros[i].ID, libros[i].Nombre, libros[i].Autor);
-    }
-}
+    printf("Ingrese Fecha de publicacion: ");
+    fflush(stdin);
+    scanf("%d", &add.FechaPublicado);
 
-/*----------------------------------------------------------------*/
-
-int buscar_Libro(int id){
-    system ("cls");
-    cabeza();
-    for (int i = 0; i < numCantidadLibros; i++){ 
-        if (libros[i].ID == id){ 
-            printf("ID: %d, Nombre: %s, Autor: %s\n", libros[i].ID, libros[i].Nombre, libros[i].Autor); 
-            return 0; 
-        } 
-    } 
+    fseek(fp, 0, SEEK_END);
+    fwrite(&add, sizeof(add), 1, fp);
 
     fclose(fp);
 
