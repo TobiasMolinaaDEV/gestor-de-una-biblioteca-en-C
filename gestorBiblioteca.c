@@ -114,7 +114,6 @@ void menu() {
 
 
 void usuario_validado(){
-    cabeza();
     char username[MAX_LONGITUD]; 
     char password[MAX_LONGITUD]; 
     int found = 0; // Pedir usuario y contraseña 
@@ -182,7 +181,7 @@ void menu_libros(){
                 printf("Ingrese el ID del libro: "); 
             break;
             case 4:
-                printf("Ingrese el ID del libro que quiere editar: "); 
+                editar_libro();
                 break;
             case 5:
                 printf("Ingrese el ID del libro a borrar: "); 
@@ -283,6 +282,48 @@ void verListaLibros(){
     fclose(fp);
     printf("Presione cualquier tecla...\n\n");
     getchar();
+}
+
+int editar_libro(){
+    int count = 0;
+    int d = 0; 
+    cabeza();
+    printf("Ingrese el ID del libro que quiere editar: ");
+    scanf("%d", &d);
+    getchar();
+    fp = fopen("libros.txt", "rb+");
+
+    while (fread(&add, sizeof(add), 1, fp) ==1)
+    {
+        if (d == add.ID)
+        {
+            // printf("Este libro ya está en la biblioteca.");
+            printf("\t%d", add.ID);
+            printf("\t |");
+            printf("\t%s", add.Titulo);
+            printf("\t |");
+            printf("\t%s", add.Autor);
+            printf("\t |");
+            printf("\t%s", add.editorial);
+            printf("\t |");
+            printf("\t%d\n\n", add.FechaPublicado);
+            scanf("");
+            getchar();
+            
+            fseek(fp, ftell(fp) - sizeof(add), 0);
+            fwrite(&add, sizeof(add), 1, fp);
+
+            fclose(fp);
+            printf("\n\nPress any key ........ \n");
+            getchar();
+            return 0;
+        
+        }
+    }
+
+    printf("Este libro no está en la biblioteca.");
+    getchar();
+    return 0;
 }
 
 void ayuda() {
