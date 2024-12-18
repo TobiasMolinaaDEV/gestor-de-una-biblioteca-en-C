@@ -324,6 +324,7 @@ int editar_libro(){
     printf("Este libro no está en la biblioteca.");
     getchar();
     return 0;
+    
 }
 
 void ayuda() {

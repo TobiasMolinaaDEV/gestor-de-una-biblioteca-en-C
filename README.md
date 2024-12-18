@@ -1,2 +1,2 @@
 # library-project-in-C
-A simple Library project using C programming.
+A simple Library project using C programming...
